@@ -1,0 +1,49 @@
+-- Estrutura inicial do banco de dados para o Reforma Pro
+-- Focado em PostgreSQL
+
+-- Tabela de Usuários (Empresas de Reforma)
+CREATE TABLE users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    company_name VARCHAR(255),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabela de Projetos/Obras
+CREATE TABLE projects (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id),
+    client_name VARCHAR(255) NOT NULL,
+    address TEXT,
+    status VARCHAR(50) DEFAULT 'planejamento', -- planejamento, em_execucao, concluido
+    is_eco_friendly BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabela de Orçamentos (Sustentabilidade)
+CREATE TABLE estimates (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    project_id UUID REFERENCES projects(id),
+    category VARCHAR(50), -- pintura, eletrica, hidraulica, telhado, piso
+    total_area NUMERIC(10, 2),
+    material_estimate JSONB, -- Armazena os cálculos das calculadoras
+    waste_reduction_percentage NUMERIC(5, 2), -- % de redução de desperdício
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabela de Fornecedores Verdes (Sugeridos pelo App)
+CREATE TABLE green_suppliers (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(255) NOT NULL,
+    category VARCHAR(100), -- Tintas, Pisos, Bem-Estar, Farmácia
+    link_url TEXT,
+    is_partner BOOLEAN DEFAULT FALSE
+);
+
+-- Inserindo parceiros iniciais de saúde e bem-estar do utilizador
+INSERT INTO green_suppliers (name, category, link_url, is_partner) VALUES
+('Mundo Verde', 'Bem-Estar / Alimentos Naturais', 'https://www.mundoverde.com.br', true),
+('Raiz Nativa', 'Produtos Orgânicos', 'https://www.raiznativa.com.br', true),
+('Drogasil', 'Saúde / Primeiros Socorros', 'https://www.drogasil.com.br', true),
+('Boomi', 'Mercado Sustentável', 'https://www.boomi.com.br', true);
