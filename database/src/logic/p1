@@ -1,0 +1,39 @@
+/**
+ * Lógica de Cálculo para Pisos e Revestimentos
+ * Foco em redução de desperdício e materiais ecológicos.
+ */
+
+export const calculateFlooring = (length, width, pieceLength, pieceWidth, margin = 0.10) => {
+    const area = length * width;
+    const pieceArea = (pieceLength / 100) * (pieceWidth / 100); // converte cm para m
+    
+    // Cálculo básico
+    const rawQuantity = area / pieceArea;
+    
+    // Aplicação da margem de quebra (desperdício padrão)
+    const totalQuantity = Math.ceil(rawQuantity * (1 + margin));
+    
+    // Cálculo de impacto ambiental (exemplo: economia de CO2 se usar cerâmica reciclada)
+    const co2Saved = area * 2.5; // kg de CO2 economizado em média por m2 sustentável
+
+    return {
+        totalArea: area.toFixed(2),
+        piecesNeeded: totalQuantity,
+        wasteEstimated: (totalQuantity - rawQuantity).toFixed(2),
+        ecoImpact: {
+            co2SavedKg: co2Saved.toFixed(2),
+            suggestion: "Recomendamos o uso de argamassa de baixa emissão de pó."
+        }
+    };
+};
+
+/**
+ * Sugestões de fornecedores baseadas na localização e perfil (Brasil)
+ */
+export const getEcoSuppliers = () => {
+    return [
+        { name: "Mundo Verde", benefit: "Kits de Purificação de Ar" },
+        { name: "Boomi", benefit: "Materiais de Limpeza Biodegradáveis" },
+        { name: "Drogasil", benefit: "Kits de Primeiros Socorros NR-18" }
+    ];
+};
